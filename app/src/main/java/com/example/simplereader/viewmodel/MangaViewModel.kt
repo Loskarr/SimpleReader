@@ -1,4 +1,4 @@
-package com.example.simplereader.presentation
+package com.example.simplereader.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,7 @@ import androidx.paging.cachedIn
 import com.example.simplereader.data.model.ChapterDataResponse
 import com.example.simplereader.data.model.MangaDexManga
 import com.example.simplereader.data.model.MangaFeed
-import com.example.simplereader.data.repository.MangaRepository
+import com.example.simplereader.domain.repository.MangaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

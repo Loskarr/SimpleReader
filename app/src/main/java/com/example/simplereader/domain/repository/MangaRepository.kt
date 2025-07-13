@@ -1,4 +1,4 @@
-package com.example.simplereader.data.repository
+package com.example.simplereader.domain.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig

@@ -1,6 +1,5 @@
 package com.example.simplereader.ui
 
-import android.service.quickaccesswallet.QuickAccessWalletService
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,21 +10,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.simplereader.presentation.MangaViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.simplereader.presentation.MangaUiState
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import androidx.compose.runtime.DisposableEffect
+import com.example.simplereader.viewmodel.MangaUiState
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.material3.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.animation.AnimatedVisibility

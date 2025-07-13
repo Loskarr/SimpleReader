@@ -12,7 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.simplereader.presentation.MangaViewModel
+import com.example.simplereader.viewmodel.MangaViewModel
 
 
 @Composable
