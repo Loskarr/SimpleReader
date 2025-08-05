@@ -1,6 +1,7 @@
 package com.example.simplereader.ui
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
@@ -23,9 +24,13 @@ import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import com.example.simplereader.data.network.NetworkModule
+import com.example.simplereader.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,10 +48,16 @@ fun ChapterReaderScreen(
     SetSystemBarsVisible(isSystemBarVisible)
 
     val listState = rememberLazyListState()
-    val currentPage = listState.firstVisibleItemIndex + 1
+    val firstVisibleItemIndex by remember {
+        derivedStateOf { listState.firstVisibleItemIndex }
+    }
+    val currentPage = firstVisibleItemIndex + 1
     val totalPages = uiState.chapterData?.chapter?.dataSaver?.size ?: 1
-    
-
+    val context = LocalContext.current
+    val imageLoader = NetworkModule.provideImageLoader(context)
+    BackHandler {
+        onBack()
+    }
     Scaffold(
         topBar = {
             AnimatedVisibility(
@@ -172,21 +183,58 @@ fun ChapterReaderScreen(
                     val baseUrl = chapterData.baseUrl
                     val hash = chapterData.chapter.hash
                     val pages = chapterData.chapter.dataSaver
+                    val prefetchedPages = remember { mutableStateOf(mutableSetOf<Int>()) }
+
+                    LaunchedEffect(currentPage, pages) {
+                        //Log.d("ChapterReader", "Prefetched pages: ${prefetchedPages.value}")
+                        val start = currentPage
+                        val end = minOf(currentPage + 6, pages.lastIndex)
+                        for (idx in start..end) {
+                            if (prefetchedPages.value.add(idx)) { // chỉ prefetch nếu chưa từng prefetch
+                                //Log.d("ChapterReader", "Preloading page: $idx")
+                                val pageUrl = "$baseUrl/data-saver/$hash/${pages[idx]}"
+                                val request = coil.request.ImageRequest.Builder(context)
+                                    .data(pageUrl)
+                                    .build()
+                                imageLoader.enqueue(request)
+                            }
+                        }
+                    }
 
                     LazyColumn(
                         state = listState,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     ) {
                         items(pages.size) { idx ->
                             val pageUrl = "$baseUrl/data-saver/$hash/${pages[idx]}"
-                            Log.d("ChapterReader", "Page URL: $pageUrl")
-                            AsyncImage(
-                                model = pageUrl,
-                                contentDescription = "Page ${idx + 1}",
+                            var isLoading by remember { mutableStateOf(true) }
+                            Box(
                                 modifier = Modifier
-                                    .fillMaxWidth(),
-                                contentScale = ContentScale.FillWidth
-                            )
+                                    .fillMaxWidth()
+                                    .defaultMinSize(minHeight = 400.dp)
+                            ) {
+                                AsyncImage(
+                                    model = pageUrl,
+                                    imageLoader = imageLoader,
+                                    contentDescription = "Page ${idx + 1}",
+                                    modifier = Modifier
+                                        .fillMaxSize(),
+                                    contentScale = ContentScale.FillWidth,
+                                    onState = {
+                                        isLoading = it is coil.compose.AsyncImagePainter.State.Loading
+                                    }
+                                )
+                                if (isLoading) {
+                                    Box(
+                                        modifier = Modifier
+                                            .matchParentSize()
+                                            .background(MaterialTheme.colorScheme.surfaceVariant),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        CircularProgressIndicator()
+                                    }
+                                }
+                            }
                         }
                     }
                 }

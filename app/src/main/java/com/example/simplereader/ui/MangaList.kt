@@ -41,6 +41,8 @@ import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.ImageLoader
+import com.example.simplereader.data.network.NetworkModule
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -60,6 +62,9 @@ fun MangaList(
     var expanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     val mangaItems = mangaPagingData?.collectAsLazyPagingItems()
+    val context = LocalContext.current
+    val imageLoader = NetworkModule.provideImageLoader(context)
+
 
     Column(modifier = modifier
             .pointerInput(Unit) {
@@ -143,7 +148,8 @@ fun MangaList(
                             modifier = Modifier.padding(8.dp),
                             onClick = {
                                 navController?.navigate("mangaDetail/${manga.id}")
-                            }
+                            },
+                            imageLoader = imageLoader
                         )
                     }
                 }
@@ -164,7 +170,8 @@ private val sortOptions = listOf(
 fun MangaItem(
     manga: MangaDexManga,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    imageLoader: ImageLoader
 ) {
     Card(
         modifier = modifier
@@ -184,6 +191,7 @@ fun MangaItem(
                     .data(manga.getCoverArt()?.getCoverUrl(manga.id))
                     .crossfade(true)
                     .build(),
+                imageLoader = imageLoader,
                 contentDescription = "Cover for ${manga.getTitle()}",
                 modifier = Modifier
                     .fillMaxWidth()

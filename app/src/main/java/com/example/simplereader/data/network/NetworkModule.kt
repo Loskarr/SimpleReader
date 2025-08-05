@@ -1,5 +1,7 @@
 package com.example.simplereader.data.network
 
+import android.content.Context
+import coil.ImageLoader
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -40,6 +42,12 @@ object NetworkModule {
         .addInterceptor(logging)
         .build()
     
+    fun provideImageLoader(context: Context): ImageLoader {
+        return ImageLoader.Builder(context)
+            .okHttpClient { client }
+            .build()
+    }
+
     private val retrofit = Retrofit.Builder()
         .baseUrl(MangaDexApiService.BASE_URL)
         .client(client)

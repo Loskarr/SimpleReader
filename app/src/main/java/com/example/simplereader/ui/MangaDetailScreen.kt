@@ -36,6 +36,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import com.example.simplereader.data.network.NetworkModule
 
 fun formatPublishAt(publishAt: String): String {
     return try {
@@ -55,6 +56,10 @@ fun MangaDetailScreen(
     navController: NavController,
 ) {
     val manga = remember(mangaId) { getMangaById(mangaId) }
+    val context = LocalContext.current
+    val imageLoader = NetworkModule.provideImageLoader(context)
+
+
     SetSystemBarsVisible(true)
     if (manga == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -90,6 +95,7 @@ fun MangaDetailScreen(
                         .data(manga.getCoverArt()?.getCoverUrl(manga.id))
                         .crossfade(true)
                         .build(),
+                    imageLoader = imageLoader,
                     contentDescription = "Cover for ${manga.getTitle()}",
                     modifier = Modifier
                         .padding(bottom = 16.dp, end = 16.dp)
