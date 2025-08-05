@@ -54,6 +54,9 @@ fun MangaList(
     onRefresh: () -> Unit = {},
     navController: NavController? = null
 ) {
+
+    SetSystemBarsVisible(true)
+
     var expanded by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     val mangaItems = mangaPagingData?.collectAsLazyPagingItems()
@@ -163,7 +166,6 @@ fun MangaItem(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null
 ) {
-    SetSystemBarsVisible(true)
     Card(
         modifier = modifier
             .fillMaxWidth()
