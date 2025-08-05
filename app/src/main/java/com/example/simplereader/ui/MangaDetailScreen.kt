@@ -78,7 +78,7 @@ fun MangaDetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Top,
         ) {
@@ -142,7 +142,7 @@ fun MangaDetailScreen(
             }
 
             var expanded by remember { mutableStateOf(false) }
-            val maxLines = if (expanded) Int.MAX_VALUE else 4
+            val maxLines = if (expanded) Int.MAX_VALUE else 3
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),

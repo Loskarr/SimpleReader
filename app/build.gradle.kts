@@ -82,5 +82,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
     implementation("androidx.compose.material:material-icons-extended:1.7.3")
+    implementation("com.squareup.okhttp3:okhttp-dnsoverhttps:4.12.0")
 
 }
